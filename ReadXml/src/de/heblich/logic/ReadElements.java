@@ -10,13 +10,13 @@ import org.xml.sax.SAXException;
 
 public class ReadElements {
 
-	public static TreeElement readElements(File f) {
+	public static Element readElements(File f) {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		try {
 			SAXParser saxParser = factory.newSAXParser();
-			ElementHandler h = new ElementHandler(new TreeElement());
+			ElementHandler h = new ElementHandler(new Element());
 			saxParser.parse(f, h);
-			return (TreeElement)h.getRoot();
+			return (Element)h.getRoot();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

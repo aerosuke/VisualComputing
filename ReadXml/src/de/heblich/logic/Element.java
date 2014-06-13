@@ -11,19 +11,19 @@ public class Element implements Cloneable{
 	protected String name;
 	protected String image;
 	protected String instance;
-	protected Element parrent;
+	protected Element parent;
 	
 	protected List<Element> children;
 	
 	public void AddChildren(Element e){
 		if(children == null)
-			children = new LinkedList<>();
+			children = new LinkedList<Element>();
 		children.add(e);
-		e.parrent = this;
+		e.parent = this;
 	}
 	
-	public Element getParrent() {
-		return parrent;
+	public Element getParent() {
+		return parent;
 	}
 
 	public List<Element> getChildren() {
@@ -65,7 +65,8 @@ public class Element implements Cloneable{
 	@Override
 	public String toString() {
 		return "Element [id=" + id + ", name=" + name + ", image=" + image + ", instance=" + 
-				instance + ", childrenCount="+((children == null)?"0":children.size())+" ]";
+				instance + ", childrenCount="+((children == null)?"0":children.size())+" "+
+				"parent="+((parent == null)?"null":parent.name) + "]";
 	}
 
 	@Override

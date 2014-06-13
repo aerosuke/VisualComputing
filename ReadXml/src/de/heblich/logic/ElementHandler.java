@@ -60,7 +60,7 @@ public class ElementHandler<E extends Element> extends DefaultHandler{
 	@Override
 	public void endElement(String uri, String localName, String qName)	throws SAXException {
 		if(qName.equalsIgnoreCase("N")){
-			current = (E) current.getParrent();
+			current = (E) current.getParent();
 		}else if(qName.equalsIgnoreCase("Value")){
 			lastKey = null;
 		}

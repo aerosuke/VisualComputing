@@ -1,12 +1,16 @@
 package de.heblich;
 
+import java.awt.BorderLayout;
 import java.io.File;
 
+import javax.swing.JFrame;
+import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-import de.heblich.gui.TreeWindow;
+import de.heblich.gui.DummyComp;
+import de.heblich.logic.Element;
 import de.heblich.logic.ReadElements;
-import de.heblich.logic.TreeElement;
+import de.heblich.logic.controller.Speaker;
 
 public class Test {
 
@@ -18,15 +22,20 @@ public class Test {
 		File f = new File(pathf, "E-Bike_v4.xml");
 		System.out.println(f.getAbsolutePath() + " "+f.exists());
 		
-		final TreeElement root = ReadElements.readElements(f);
+		final Element root = ReadElements.readElements(f);
+		Speaker.getInstance().SetRoot(root);
 		
-		System.out.println(root);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
-				TreeWindow tw = new TreeWindow(root, pathf);
+				JFrame f = new JFrame("Dummy");
+				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				f.add(new DummyComp(pathf), BorderLayout.NORTH);
+				f.add(new DummyComp(pathf), BorderLayout.SOUTH);
+				f.setSize(300, 300);
+				f.setVisible(true);
 			}
 		});
 	}
