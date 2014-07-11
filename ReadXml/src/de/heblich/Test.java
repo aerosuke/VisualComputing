@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
+import de.heblich.gui.Dummy2;
 import de.heblich.gui.DummyComp;
 import de.heblich.logic.Element;
 import de.heblich.logic.ReadElements;
@@ -33,6 +34,7 @@ public class Test {
 				JFrame f = new JFrame("Dummy");
 				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				f.add(new DummyComp(pathf), BorderLayout.NORTH);
+				f.add(new Dummy2(pathf), BorderLayout.CENTER);
 				f.add(new DummyComp(pathf), BorderLayout.SOUTH);
 				f.setSize(300, 300);
 				f.setVisible(true);
