@@ -15,11 +15,11 @@ import de.heblich.logic.Element;
 import de.heblich.logic.ReadElements;
 import de.heblich.logic.controller.Speaker;
 
-public class Test {
+public class Test2 {
 
 	public static void main(String[] args) {
 		
-		String top = Test.class.getResource("../../.").getFile();
+		String top = Test2.class.getResource("../../.").getFile();
 		String path = top + "../res";
 //		String path = new String("C://Dokumente und Einstellungen//mmg//workspace//ReadXml//res");
 		final File pathf = new File(path);
@@ -46,7 +46,7 @@ public class Test {
 //				f.add(dummy);
 //				f.setPreferredSize(new Dimension(800, 600));
 				
-				f.add(new Dummy2(pathf), BorderLayout.CENTER);
+				f.add(new Dummy2(f, pathf), BorderLayout.CENTER);
 				f.setSize(800, 600);
 				
 				f.setVisible(true);
