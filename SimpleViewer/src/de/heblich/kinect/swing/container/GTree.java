@@ -1,18 +1,29 @@
 package de.heblich.kinect.swing.container;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import de.heblich.kinect.gestures.GestureListener;
+import de.heblich.kinect.gestures.MotionLine;
+import de.heblich.logic.Element;
+
 public class GTree extends JTree{
 
-	public GTree() {
+	private List<EButton> buttons = new ArrayList<EButton>();
+	
+	public GTree(Element root) {
 		// TODO Auto-generated constructor stub
+	super(new TreeNodeProxy(root));
 	
-	
-	
+	setMinimumSize(new Dimension(300, 300));
+	setEditable(false);
 	setExpandsSelectedPaths(true); 
     setToggleClickCount(1);
     setEditable(true);
@@ -21,8 +32,29 @@ public class GTree extends JTree{
          
          public Component getTreeCellRendererComponent ( JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus )
          {
-              final GButton b = new GButton(value.toString());
-              
+        	 TreeNodeProxy tnp = (TreeNodeProxy)value;
+        	 EButton b = (EButton)tnp.getObj();
+        	 if(tnp.getObj() == null){
+        		 tnp.setObj(new EButton(tnp.getEle(), true));
+        		 b = (EButton)tnp.getObj();
+        		 buttons.add(b);
+        		 MotionLine ml = new MotionLine(90);
+        		 ml.register(new GestureListener() {
+					
+					@Override
+					public void success(GMotionComp source) {
+						System.out.println("Sucsess");
+					}
+					
+					@Override
+					public void abort(GMotionComp source) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+        		 b.addMotion(ml);
+        	 }
+        	 
               //b.
               
               /*
@@ -71,6 +103,8 @@ public class GTree extends JTree{
               */
               return b;
          }
+         
+         
     });
     
 	}
@@ -79,4 +113,8 @@ public class GTree extends JTree{
 		return getBounds().contains(point);
 	}
 	
+    @Override
+    public Component[] getComponents() {
+    	return buttons.toArray(new EButton[0]);
+    }
 }

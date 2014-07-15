@@ -9,7 +9,7 @@ import de.heblich.logic.ReadElements;
 public class PrintTree {
 
 	public static void main(String[] args) {
-		String top = Test2.class.getResource("../../.").getFile();
+		String top = Conf.class.getResource("../../.").getFile();
 		String path = top + "../res";
 		final File pathf = new File(path);
 		File f = new File(pathf, "E-Bike_v4.xml");

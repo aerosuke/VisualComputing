@@ -32,6 +32,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.border.AbstractBorder;
 
 import res.Resource;
@@ -62,8 +64,6 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 	
 	private Point2D.Double[] lastPoints;
 	private int midpointCounter = 0;
-	
-//	private MotionAbel gestures; 
 	
 	public GKinectContainer(JFrame frame) {
 		lastPoints = new Point2D.Double[5];
@@ -164,24 +164,15 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 						}*/
 						AddToMitpoint(new Point2D.Double(p.getX(), -p.getY()));
 						Point2D.Double newPoint = getMitpoint();
+					
 						if(newPoint != null){
-							if(pane.handyPoint == null)
-								pane.handyPoint =  new Point2D.Double(); 
-							pane.handyPoint.setLocation(p.getX(), -p.getY());
-	//						gestures.update(new Point2D.Double(p.getX(),-p.getY()));
-							//test.setText(""+((Line)gestures).length());
+							pane.handyPoint =  newPoint; 
+							//if(pane.handyPoint == null)
+							//	pane.handyPoint =  newPoint; 
 						}
 					}
-	//				gestures.update((Double) pane.handyPoint);
-					//rightHand.getPosition();
-//					if(p.getZ() - center.getY() > 1200){
-//						pane.color = Color.GREEN;
-//					}else{
-//						pane.color = Color.RED;
-//					}
 				}else{
 					pane.handyPoint = null;
-	//				gestures.Clear();
 				}
 
 
@@ -200,44 +191,20 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 		private static final long serialVersionUID = 1L;
 
 		public Point2D.Double handyPoint;
-		public MotionManager manager = new MotionManager();
-//		public Color color = Color.GREEN;
-//		private boolean pressed = false;
-//		private Component last;
+		public MotionManager manager = MotionManager.Instace.ME.me;
 		private Image hand;
 		public double rotation;
-		
-//		public MotionAbel dummy;
 		
 		public MYGlassPane() {
 			super();
 			hand = Resource.getImage("hand.png");
 		}
 
-//		public Component getComponentAt(Container parent, int screenX, int screenY) {
-//			Point s = parent.getLocationOnScreen();
-//			screenX -= s.x;
-//			screenY -= s.y;
-//			Point p = new Point(screenX, screenY) ; 
-//			test.setText("<html>"+parent.getComponentCount());
-//			test.setText(test.getText()+"<br>parent x:"+s.x+" y:"+s.y);
-//			
-//			Component comp = null;
-//			for (Component child : parent.getComponents()) {
-//				if (child.getBounds().contains(p)) {
-//					comp = child;
-//				}
-//				test.setText(test.getText()+"<br> "+child.getBounds());
-//			}
-//			test.setText(test.getText()+"<br>Pointer x:"+screenX+" y:"+screenY);
-//			test.setText(test.getText()+"</html>");
-//			return comp;
-//		}
 		
-		public GMotionComp[] GetMotionComponents(Point2D.Double hand){
+		public List<GMotionComp> GetMotionComponents(Point2D.Double hand, JComponent currentParent){
 			List<GMotionComp> back = new ArrayList<GMotionComp>();
-		
-			JComponent parent = GKinectContainer.this;
+			
+			JComponent parent = currentParent;
 			for (Component child : parent.getComponents()) {
 				if(child instanceof GMotionComp && ((GMotionComp)child).isPointOverThis(hand)){
 					back.add(((GMotionComp)child));
@@ -248,8 +215,26 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 					if(child instanceof GButton){
 						((GButton)child).setSelected(false);
 					}
+					else if(child instanceof JScrollPane){
+						JScrollPane sp = (JScrollPane)child;
+						JViewport viewport = sp.getViewport();
+						Point2D.Double nP = new Point2D.Double(hand.x - child.getBounds().x, hand.y - child.getBounds().y);
+						Point dummy = new Point((int)nP.getX(), (int)nP.getY());
+						dummy = viewport.toViewCoordinates(dummy);
+						nP = new Point2D.Double(dummy.x, dummy.y);
+						back.addAll(GetMotionComponents(nP, (JComponent)viewport.getView()));
+						
+					}else if(child instanceof JComponent){
+						Point2D.Double nP = new Point2D.Double(hand.x - child.getBounds().x, hand.y - child.getBounds().y);
+						back.addAll(GetMotionComponents(nP, (JComponent)child));
+					}
 				}
 			}
+			return back;
+		}
+		
+		public GMotionComp[] GetMotionComponents(Point2D.Double hand){
+			List<GMotionComp> back = GetMotionComponents(hand, GKinectContainer.this);
 			return back.toArray(new GMotionComp[0]);
 		}
 		
@@ -269,34 +254,6 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 					manager.AddMotion(gMotionComp);
 				}
 				manager.update(hand);
-				/*
-				if(x > myRectangle.getX() && x < myRectangle.getX() + myRectangle.getWidth() &&
-						y > myRectangle.getY() && y < myRectangle.getY() + myRectangle.getHeight()){
-					
-					Component c = getComponentAt(JKinectContainer.this, (int)x, (int)y);
-					
-					if(c != null){
-						if(c instanceof AbstractButton){
-							AbstractButton b = (AbstractButton)c;
-							if(color == Color.RED){
-								if(!b.getModel().isPressed() && c != last){
-									b.doClick();
-								}
-							}else{
-								b.getModel().setRollover(true);
-								b.getModel().setSelected(true);
-							}
-							last = c;
-						}
-					}else{
-						last = null;
-					}
-					if(last != null && c != last && last instanceof AbstractButton){
-						((AbstractButton)last).getModel().setRollover(false);
-						((AbstractButton)last).getModel().setSelected(false);
-					}
-				}
-				*/
 			}
 		}
 

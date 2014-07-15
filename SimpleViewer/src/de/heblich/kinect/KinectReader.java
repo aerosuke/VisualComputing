@@ -1,6 +1,7 @@
 package de.heblich.kinect;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,11 +13,12 @@ import de.heblich.dummy.MyFrameRepainter;
 
 public class KinectReader implements com.primesense.nite.UserTracker.NewFrameListener{
 
-	private List<KinectReaderEvent> listener = new ArrayList<>();
+	private List<KinectReaderEvent> listener;
 	private UserTracker ut;
 	private Set<Short> trackUser = new HashSet<>();
 
 	public KinectReader() {
+		listener = Collections.synchronizedList(new ArrayList<KinectReaderEvent>());
 		ut = UserTracker.create();
 		ut.addNewFrameListener(this);
 	}
@@ -43,10 +45,9 @@ public class KinectReader implements com.primesense.nite.UserTracker.NewFrameLis
 	}
 
 	private void notifyAll(UserTrackerFrameRef userTrackerRef){
-		for (KinectReaderEvent envent : listener) {
-			envent.newFrame(userTrackerRef, this);
+		for (int i = 0; i < listener.size(); i++) {
+			listener.get(i).newFrame(userTrackerRef, this);
 		}
-
 	}
 
 	public void register(KinectReaderEvent event){

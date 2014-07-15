@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 
 import de.heblich.kinect.gestures.GestureListener;
 import de.heblich.kinect.gestures.MotionLine;
+import de.heblich.kinect.swing.container.EButton;
 import de.heblich.kinect.swing.container.GButton;
 import de.heblich.kinect.swing.container.GKinectContainer;
 import de.heblich.kinect.swing.container.GMotionComp;
@@ -29,10 +30,9 @@ import de.heblich.logic.MathHelper;
 import de.heblich.logic.controller.Speaker;
 import de.heblich.logic.controller.SpeakerListener;
 
-public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionListener, GestureListener{
+public class Dummy2 extends JPanel implements SpeakerListener, ActionListener, GestureListener{
 	
 	private Speaker sp = Speaker.getInstance();
-	private File path;
 	int aX;
 	int bY;
 	int r;
@@ -53,44 +53,10 @@ public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionL
 	public Dimension getMinimumSize() {
 		return getSize();
 	}
-	
-	class EButton extends GButton{
-		
-		Object objs;
 
-		public EButton() {
-			super();
-			// TODO Auto-generated constructor stub
-		}
-
-		public EButton(Action a) {
-			super(a);
-			// TODO Auto-generated constructor stub
-		}
-
-		public EButton(Icon icon) {
-			super(icon);
-			// TODO Auto-generated constructor stub
-		}
-
-		public EButton(String text, Icon icon) {
-			super(text, icon);
-			// TODO Auto-generated constructor stub
-		}
-
-		public EButton(String text) {
-			super(text);
-			// TODO Auto-generated constructor stub
-		}
-		
-		
-	}
 	
 	
-	
-	public Dummy2(JFrame frame, File path) {
-		super(frame);
-		this.path = path;
+	public Dummy2() {
 //		this.setLayout(new BorderLayout());
 		this.setLayout(null);
 		setSize(800, 600);
@@ -105,8 +71,7 @@ public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionL
 	}
 
 	private GButton createChildBth(Element e, int x, int y){
-		EButton d = new EButton(getImage(e));
-		d.objs = e;
+		EButton d = new EButton(e);
 		d.addActionListener(this);
 		int xOffset = x - 42;
 		int yOffset = y - 32;
@@ -137,8 +102,7 @@ public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionL
 		JPanel first = new JPanel();
 		
 		if(sp.getCurrent() != sp.getRoot()){
-			EButton b = new EButton(getImage(sp.getCurrent().getParent()));
-			b.objs = sp.getCurrent().getParent();
+			EButton b = new EButton(sp.getCurrent().getParent());
 			b.addActionListener(this);
 			
 			first.add(b);
@@ -148,8 +112,7 @@ public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionL
 		
 // Das ist das Panel für den Current-Node
 		JPanel sec = new JPanel();
-		EButton b =  new EButton(getImage(sp.getCurrent()));
-		b.objs = sp.getCurrent();
+		EButton b =  new EButton(sp.getCurrent());
 		System.out.println(sp.getCurrent().toString());
 		b.addActionListener(this);
 		sec.add(b);
@@ -192,13 +155,6 @@ public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionL
 		repaint();
 	}
 	
-	private ImageIcon getImage(Element element){
-		File f = new File(path, element.getImage());
-		ImageIcon ii = new ImageIcon(f.getAbsolutePath());
-		ii.setImage(ii.getImage().getScaledInstance(85, 64, java.awt.Image.SCALE_SMOOTH));
-		return ii;
-	}
-	
 	@Override
 	public void notifySpeakerChange(Object source, Element e) {
 		rebuild();
@@ -216,7 +172,7 @@ public class Dummy2 extends GKinectContainer implements SpeakerListener, ActionL
 	public void success(GMotionComp source) {
 		if(source instanceof EButton){
 			EButton ebth = (EButton)source;
-			sp.select(this, (Element)ebth.objs);
+			sp.select(this, (Element)ebth.getElement());
 		}
 	}
 

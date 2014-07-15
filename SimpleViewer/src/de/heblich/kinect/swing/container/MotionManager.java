@@ -3,13 +3,29 @@ package de.heblich.kinect.swing.container;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import de.heblich.kinect.gestures.MotionAbel;
 
-public class MotionManager {
+public class MotionManager extends Observable {
 
 	protected List<MotionAbel> currentMotions = new ArrayList<MotionAbel>();
 	
+	
+	public static enum Instace{
+		ME(new MotionManager());
+		
+		public MotionManager me;
+		
+		private Instace(MotionManager me) {
+			this.me = me;
+		}
+		
+		
+	}
+	
+	private MotionManager() {
+	}
 	
 	public void update(Point2D.Double hand){
 		//Look for completet Gestures;
@@ -34,6 +50,8 @@ public class MotionManager {
 		for (int i = 0; i < currentMotions.size(); i++) {
 			currentMotions.get(i).update(hand);
 		}
+		setChanged();
+		notifyObservers(this);
 		//System.out.println("current anz: "+currentMotions.size());
 	}
 	
