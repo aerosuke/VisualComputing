@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 import de.heblich.Conf;
 import de.heblich.logic.Element;
 
-public class EButton extends GButton {
+public class EButton extends GButton{
 
 	private Element element;
 
@@ -28,17 +28,7 @@ public class EButton extends GButton {
 		element = e;
 		ShowIcon();
 		if(id){
-			Icon i = super.getIcon();
-			BufferedImage bf = new BufferedImage(i.getIconWidth(), i.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-			i.paintIcon(null, bf.getGraphics(),0,0);
-			bf.flush();
-			
-			BufferedImage bf2 = new BufferedImage(32, 32, BufferedImage.TYPE_4BYTE_ABGR);
-			bf2.getGraphics().drawImage(bf, 0, 0, bf2.getWidth(), bf2.getHeight(), null);
-			bf.flush();
-			
-			setIcon(new ImageIcon(bf2));
-			
+			reSizeImage(32,32);
 			setText(e.getId());    
 			setVerticalTextPosition(SwingConstants.BOTTOM);
 		    setHorizontalTextPosition(SwingConstants.CENTER);
@@ -85,6 +75,19 @@ public class EButton extends GButton {
 
 	public void setElement(Element element) {
 		this.element = element;
+	}
+	
+	public void reSizeImage(int wigth, int hight){
+		Icon i = super.getIcon();
+		BufferedImage bf = new BufferedImage(i.getIconWidth(), i.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		i.paintIcon(null, bf.getGraphics(),0,0);
+		bf.flush();
+		
+		BufferedImage bf2 = new BufferedImage(wigth, hight, BufferedImage.TYPE_4BYTE_ABGR);
+		bf2.getGraphics().drawImage(bf, 0, 0, bf2.getWidth(), bf2.getHeight(), null);
+		bf.flush();
+		
+		setIcon(new ImageIcon(bf2));
 	}
 	
 	@Override

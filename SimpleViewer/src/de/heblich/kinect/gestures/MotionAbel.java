@@ -1,6 +1,8 @@
 package de.heblich.kinect.gestures;
 
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import de.heblich.kinect.swing.container.GMotionComp;
@@ -34,4 +36,8 @@ public interface MotionAbel {
 	GMotionComp getSource();
 	
 	MotionAbel clone();
+	
+	void debug(Graphics2D graphics);
+	
+	void printMotion(Graphics2D graphics, BufferedImage hand, int wigth, int hight);
 }

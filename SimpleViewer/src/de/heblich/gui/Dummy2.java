@@ -70,27 +70,42 @@ public class Dummy2 extends JPanel implements SpeakerListener, ActionListener, G
 		
 	}
 
+	
+	
 	private GButton createChildBth(Element e, int x, int y){
 		EButton d = new EButton(e);
 		d.addActionListener(this);
-		int xOffset = x - 42;
-		int yOffset = y - 32;
-		d.setBounds(xOffset, yOffset, 85, 64);
+		int xOffset = x - 50;
+		int yOffset = y - 40;
+		d.setBounds(xOffset, yOffset, 100, 80);
 		
 		Point2D.Double pointButton = new Point2D.Double(x,y);
 		
 		Point2D.Double panelPoint = new Point2D.Double(getWidth() / 2, getHeight() / 2);
+		double dirR;
 		
 		Point2D.Double dir = MathHelper.sub(panelPoint, pointButton);
-		
-		double dirR = Math.toDegrees(MathHelper.dirVectorToAngle(dir));
-		System.out.println(dir + " is "+dirR);
+		if(panelPoint.x == pointButton.x && panelPoint.y < pointButton.y){
+			dirR = -180;
+		}else{
+			dirR = Math.toDegrees(MathHelper.dirVectorToAngle(dir));
+		}
+		//System.out.println(dir + " is "+dirR);
 		MotionLine line = new MotionLine(dirR);
 		
 		line.register(this);
 		d.addMotion(line);
 		
 		return d;
+	}
+	
+	@Override
+	public void repaint() {
+		super.repaint();
+		aX = getWidth() / 2;
+		bY = getHeight() / 2;
+		int m = Math.min(aX, bY);
+        r = 4 * m / 5;
 	}
 	
 	public void rebuild(){
@@ -111,16 +126,18 @@ public class Dummy2 extends JPanel implements SpeakerListener, ActionListener, G
 		this.add(first,BorderLayout.NORTH);
 		
 // Das ist das Panel für den Current-Node
-		JPanel sec = new JPanel();
+		//JPanel sec = new JPanel();
 		EButton b =  new EButton(sp.getCurrent());
 		System.out.println(sp.getCurrent().toString());
 		b.addActionListener(this);
-		sec.add(b);
+		//sec.add(b);
 //		this.add(sec,BorderLayout.CENTER);
-		int rx = getWidth()/2 -50;
-		int ry = getHeight()/2 -50;
-		sec.setBounds(rx, ry, 100, 100);
-		this.add(sec);
+		int rx = getWidth()/2 -100;
+		int ry = getHeight()/2 -100;
+		b.setBounds(rx, ry, 200, 152);
+		b.reSizeImage(195,147);
+		this.add(b);
+		//this.add(sec);
 		
 		
 		int multiply = 0;

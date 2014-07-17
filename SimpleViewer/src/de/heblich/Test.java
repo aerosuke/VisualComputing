@@ -76,7 +76,7 @@ public class Test {
 		//GTree tree = new GTree(root);
 		//final GKinectScrollPane gksp = new GKinectScrollPane(f, tree);
 		//final TestPanel ki = new TestPanel(f);
-		f.setSize(1067, 600);
+		f.setSize(1200, 800);
 		kr.register(di);
 		kr.register(fi);
 		kr.register(si);

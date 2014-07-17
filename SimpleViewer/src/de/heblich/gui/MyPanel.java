@@ -18,6 +18,7 @@ public class MyPanel extends GKinectContainer {
 		add(new Dummy2(), BorderLayout.CENTER);
 		add(new JScrollPane(new GTree(root)), BorderLayout.WEST);
 		add(new GMotionManagerLabel(), BorderLayout.SOUTH);
+		add(new NavBar2(), BorderLayout.NORTH);
 	}
 
 }

@@ -1,10 +1,12 @@
 package de.heblich.kinect.swing.container;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
@@ -16,22 +18,27 @@ public class GButton extends JButton implements GMotionComp {
 	
 	public GButton() {
 		super();
+		setSelected(false);
 	}
 
 	public GButton(Action a) {
 		super(a);
+		setSelected(false);
 	}
 
 	public GButton(Icon icon) {
 		super(icon);
+		setSelected(false);
 	}
 
 	public GButton(String text, Icon icon) {
 		super(text, icon);
+		setSelected(false);
 	}
 
 	public GButton(String text) {
 		super(text);
+		setSelected(false);
 	}
 
 	@Override
@@ -53,6 +60,10 @@ public class GButton extends JButton implements GMotionComp {
 	}
 	
 	public void setSelected(boolean value){
+		if(value)
+			setBorder(BorderFactory.createEtchedBorder(Color.BLUE, Color.DARK_GRAY));
+		else
+			setBorder(BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.DARK_GRAY));
 		getModel().setRollover(value);
 		getModel().setSelected(value);
 	}

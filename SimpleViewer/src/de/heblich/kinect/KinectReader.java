@@ -34,7 +34,7 @@ public class KinectReader implements com.primesense.nite.UserTracker.NewFrameLis
 		if(!trackUser.contains(userId)){
 			try{
 				//System.out.println("SmoothingFactor: "+ut.getSkeletonSmoothingFactor());
-				ut.setSkeletonSmoothingFactor(0.8f);
+				ut.setSkeletonSmoothingFactor(0.2f);
 				System.out.println("Track user: "+userId);
 				ut.startSkeletonTracking(userId);
 				trackUser.add(userId);

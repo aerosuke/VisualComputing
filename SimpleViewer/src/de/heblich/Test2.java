@@ -43,7 +43,7 @@ public class Test2 {
 				//			f.setPreferredSize(new Dimension(800, 600));
 
 				f.add(new MyPanel(f,root), BorderLayout.CENTER);
-				f.setSize(800, 600);
+				f.setSize(1000, 700);
 
 				f.setVisible(true);
 				//			f.pack();

@@ -2,6 +2,7 @@ package de.heblich.kinect.swing.container;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
@@ -25,6 +26,7 @@ public class MotionManager extends Observable {
 	}
 	
 	private MotionManager() {
+		currentMotions = Collections.synchronizedList(currentMotions);
 	}
 	
 	public void update(Point2D.Double hand){

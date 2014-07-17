@@ -22,10 +22,12 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.management.MXBean;
+import javax.print.attribute.standard.MediaSize.Other;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -47,6 +49,7 @@ import com.primesense.nite.SkeletonState;
 import com.primesense.nite.UserData;
 import com.primesense.nite.UserTrackerFrameRef;
 
+import de.heblich.Conf;
 import de.heblich.kinect.KinectReader;
 import de.heblich.kinect.KinectReaderEvent;
 import de.heblich.kinect.gestures.GestureAdapter;
@@ -61,16 +64,16 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 	private JFrame frame;
 	private MYGlassPane pane = new MYGlassPane();
 	private Rectangle myRectangle;
-	
+
 	private Point2D.Double[] lastPoints;
 	private int midpointCounter = 0;
-	
+
 	public GKinectContainer(JFrame frame) {
 		lastPoints = new Point2D.Double[5];
 		this.frame = frame;
 		frame.setGlassPane(pane);
 		pane.setVisible(true);
-		
+
 	}
 
 	private Point2D.Double getMitpoint(){
@@ -86,20 +89,20 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 		y = y / lastPoints.length;
 		return new Point2D.Double(x, y);
 	}
-	
+
 	private void AddToMitpoint(Point2D.Double p){
 		lastPoints[midpointCounter] = p;
 		midpointCounter++;
 		midpointCounter = midpointCounter % lastPoints.length;
 	}
-	
+
 	private void ClearMitpoint(){
 		for (int i = 0; i < lastPoints.length; i++) {
 			lastPoints[i] = null;
 		}
 		midpointCounter = 0;
 	}
-	
+
 
 	public void finishAdd(){
 		myRectangle = this.getBounds();
@@ -120,7 +123,7 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 		//var pitch = asin(-2.0*(q.x*q.z - q.w*q.y));
 		//var roll = atan2(2.0*(q.x*q.y + q.w*q.z), q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z);
 	}
-	
+
 	private void calcPoint(UserTrackerFrameRef userTrackerFrameRef, KinectReader kinectReader){
 		if(userTrackerFrameRef.getUsers().size() > 0){
 			short userNr = 0;
@@ -149,11 +152,11 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 						double dirAngle =  Math.atan2(dir.getY(), dir.getX());
 						pane.rotation =  -Math.PI - Math.PI/2 -dirAngle;
 					}
-					
+
 					if(pane.handyPoint == null){
 						ClearMitpoint();
 						pane.handyPoint = new Point2D.Double();
-//						gestures.Clear();
+						//						gestures.Clear();
 					}else{
 						/*
 						if(elbowRot != null){
@@ -164,7 +167,7 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 						}*/
 						AddToMitpoint(new Point2D.Double(p.getX(), -p.getY()));
 						Point2D.Double newPoint = getMitpoint();
-					
+
 						if(newPoint != null){
 							pane.handyPoint =  newPoint; 
 							//if(pane.handyPoint == null)
@@ -194,16 +197,16 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 		public MotionManager manager = MotionManager.Instace.ME.me;
 		private Image hand;
 		public double rotation;
-		
+
 		public MYGlassPane() {
 			super();
 			hand = Resource.getImage("hand.png");
 		}
 
-		
+
 		public List<GMotionComp> GetMotionComponents(Point2D.Double hand, JComponent currentParent){
 			List<GMotionComp> back = new ArrayList<GMotionComp>();
-			
+
 			JComponent parent = currentParent;
 			for (Component child : parent.getComponents()) {
 				if(child instanceof GMotionComp && ((GMotionComp)child).isPointOverThis(hand)){
@@ -223,7 +226,7 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 						dummy = viewport.toViewCoordinates(dummy);
 						nP = new Point2D.Double(dummy.x, dummy.y);
 						back.addAll(GetMotionComponents(nP, (JComponent)viewport.getView()));
-						
+
 					}else if(child instanceof JComponent){
 						Point2D.Double nP = new Point2D.Double(hand.x - child.getBounds().x, hand.y - child.getBounds().y);
 						back.addAll(GetMotionComponents(nP, (JComponent)child));
@@ -232,18 +235,18 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 			}
 			return back;
 		}
-		
+
 		public GMotionComp[] GetMotionComponents(Point2D.Double hand){
 			List<GMotionComp> back = GetMotionComponents(hand, GKinectContainer.this);
 			return back.toArray(new GMotionComp[0]);
 		}
-		
+
 		private Point2D.Double FromScreenToCompSpace(double x, double y){
 			x = x- myRectangle.getX();
 			y = y- myRectangle.getY();
 			return new Point2D.Double(x, y);
 		}
-		
+
 		public void process(){
 			if (handyPoint != null) {
 				double x = handyPoint.getX() + myRectangle.getCenterX();
@@ -259,7 +262,7 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 
 		protected void paintComponent(Graphics old_g) {
 			Graphics2D g = (Graphics2D)old_g;
-			g.clipRect((int)myRectangle.getX(), (int)myRectangle.getY(), (int)myRectangle.getWidth(), (int)myRectangle.getHeight());
+			//g.clipRect((int)myRectangle.getX(), (int)myRectangle.getY(), (int)myRectangle.getWidth(), (int)myRectangle.getHeight());
 			//double midX = myRectangle.getCenterX()
 
 
@@ -267,28 +270,42 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 				//g.drawImage(hand, (int)handyPoint.getX(), (int)handyPoint.getY(), null);
 				double x = handyPoint.getX() + myRectangle.getCenterX();
 				double y = handyPoint.getY() + myRectangle.getCenterY();
-				
+
 				Image rotHand = hand;
 				if(rotation != 0){
 					rotHand = ImageHelper.rotateAroundImage(hand, rotation);
+					//rotHand = ImageHelper.transparentImage(ImageHelper.toBufferedImage(rotHand), 0.5f);
 				}
 				int imgW = rotHand.getWidth(null);
 				int imgH = rotHand.getHeight(null);
-				
+
+
+				MotionManager motionManager = MotionManager.Instace.ME.me;
+				if(Conf.SHOW_GESTURE){
+					for (int i = 0; i <  motionManager.currentMotions.size(); i++) {
+						motionManager.currentMotions.get(i).printMotion(g, ImageHelper.toBufferedImage(rotHand),imgW*2,imgH*2);
+					}
+				}
 				/*
 				g.setPaint(color);
 				Ellipse2D e = new Ellipse2D.Double(x -10, y -10, 20, 20);
 				g.fill(e);
-				*/
+				 */
 				g.drawImage(rotHand, (int)x -imgW/2, (int)y-imgH/2,imgW*2,imgH*2, null);
-				
+
+
+				if(Conf.DEBUG){
+					for (int i = 0; i <  motionManager.currentMotions.size(); i++) {
+						motionManager.currentMotions.get(i).debug(g);
+					}
+				}
 				/*
 				g.setPaint(color);
 				Ellipse2D e = new Ellipse2D.Double(x -10, y -10, 20, 20);
 				g.fill(e);
-				*/
+				 */
 			}
-/*			
+			/*			
 			//drawGesture
 			List<Point2D.Double> l = dummy.getPoints();
 			if(l != null && l.size() > 0){
@@ -313,7 +330,7 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 						g.draw(line);
 						last = current;
 					}
-					
+
 				}
 				Point2D.Double perfect = ((MotionLine)dummy).perfectEndPoint();
 				Point2D.Double last = (Point2D.Double)l.get(0).clone();
@@ -323,9 +340,7 @@ public class GKinectContainer extends JPanel implements KinectReaderEvent {
 				Line2D.Double line = new Line2D.Double(last, perfect);
 				g.draw(line);
 			}*/
-			
 		}
-		
 
 	}
 

@@ -18,6 +18,9 @@ import de.heblich.logic.controller.Speaker;
 public class Conf {
 
 	public static File PATH;
+	public static boolean DEBUG = false;
+	public static boolean SHOW_GESTURE = true;
+	
 	
 	static {
 		String top = Conf.class.getResource("../../.").getFile();

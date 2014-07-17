@@ -30,7 +30,7 @@ public class MathHelper {
 		double winkel = dot / length(targetDir);
 		if(winkel == 0)
 			return 0;
-		winkel = Math.acos(winkel);
+		winkel = Math.atan2(targetDir.x, targetDir.y);
 		return winkel;
 	}
 	

@@ -1,5 +1,6 @@
 package de.heblich.kinect.gestures;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,4 +51,11 @@ public abstract class MotionBase implements MotionAbel {
 
 	@Override
 	public abstract MotionAbel clone();
+	
+	@Override
+	public void debug(Graphics2D graphics) {
+		
+	}
+	
+	
 }
